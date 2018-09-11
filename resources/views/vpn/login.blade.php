@@ -25,7 +25,7 @@
 		</div>
 			<div class="clear"> </div>
 	<div class="avtar">
-		<img src="{{ asset('vpn/login_dir/images/avtar.png') }}" />
+		<img src="{{ asset('vpn/images/avtar.png') }}" />
 	</div>
 			<form id="form" action="{{ route('loginPost') }}" method="post">
 					<input id="email" name="email" type="text" class="text" placeholder="Username">
