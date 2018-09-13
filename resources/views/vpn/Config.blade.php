@@ -263,7 +263,7 @@
         if ('{{$msg}}' == 'succeed') {
             alert('更新成功，配置将在整点生效，请耐心等待！');
         } else if ('{{$msg}}' == 'fail') {
-            show_err_msg('更新失败，详情咨询系统管理员');
+            show_err_msg('更新失败，详情咨询系统管理员！\n{{ $run_exception }}');
         } else if ('{{$msg}}' == 'Bad port') {
             show_err_msg('端口非法或已被占用，请更换一个端口');
         } else if ('{{$msg}}' == 'Bad password') {

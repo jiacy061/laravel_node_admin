@@ -159,8 +159,9 @@ class VpnController extends Controller
             $usr_name = array_column($ret, 'usr_name')[0];
             $ret = DB::select('SELECT email FROM login_info WHERE account=?', [$port]);
             $email = array_column($ret, 'email')[0];
+            $run_exception = '';
 
-            return response()->view('vpn/Config', compact('port', 'usr_name', 'msg', 'email'))
+            return response()->view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'))
                 ->withCookie($cookie);
         } else {
             // token错误
@@ -204,6 +205,7 @@ class VpnController extends Controller
         $obfs = $request->input('obfs');
         $protocol_param = $request->input('protocol_param');
         $obfs_param = $request->input('obfs_param');
+        $run_exception = '';
 
 //        $ret = DB::select('SELECT * FROM login_info WHERE email=?', [$email]);
         $old_port = $port;
@@ -217,7 +219,7 @@ class VpnController extends Controller
                 $ret = DB::select('SELECT usr_name FROM account_info WHERE account=?', [$port]);
                 $usr_name = array_column($ret, 'usr_name')[0];
                 $msg = 'Bad port';
-                return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email'));
+                return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
             } else {
                 // 端口合法
                 DB::update('UPDATE account_info SET account=? WHERE account=?', [$new_port, $port]);
@@ -244,7 +246,7 @@ class VpnController extends Controller
                 $ret = DB::select('SELECT usr_name FROM account_info WHERE account=?', [$port]);
                 $usr_name = array_column($ret, 'usr_name')[0];
                 $msg = 'Bad password';
-                return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email'));
+                return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
             }
         }
 
@@ -287,16 +289,17 @@ class VpnController extends Controller
         }
 
         $bool1 = $this->updateVpnSystem($old_port, $port);
-//        system('./vpn/adminDir/restartVPN', $bool2);
+        $run_exception = system('./vpn/adminDir/restartVPN', $bool2);
 	    ob_clean();
 
-//        if ($bool1 && !$bool2) {
-        if ($bool1) {
+        if ($bool1 && !$bool2) {
+//        if ($bool1) {
             $msg = 'succeed';
-            return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email'));
+            $run_exception = '';
+            return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         } else {
             $msg = 'fail';
-            return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email'));
+            return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         }
     }
 
