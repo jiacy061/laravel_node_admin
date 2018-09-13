@@ -289,16 +289,17 @@ class VpnController extends Controller
         }
 
         $bool1 = $this->updateVpnSystem($old_port, $port);
-        $run_exception = system('./vpn/adminDir/restartVPN', $bool2);
+        $run_exception = system('./vpn/admin_dir/restartVPN', $bool2);
 	    ob_clean();
 
         if ($bool1 && !$bool2) {
 //        if ($bool1) {
             $msg = 'succeed';
-            $run_exception = '';
+//            $run_exception = ''.$bool1;
             return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         } else {
             $msg = 'fail';
+            $run_exception = $run_exception.':'.$bool1.':'.$bool2;
             return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         }
     }

@@ -214,12 +214,12 @@
             <!--END PAGE WRAPPER-->
         </div>
     </div>
-    <script type="text/javascript" src="{{ asset('vpn/admin_dir/script/jquery-1.10.2.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('vpn/admin_dir/script/jquery-migrate-1.2.1.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('vpn/admin_dir/script/jquery.menu.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('vpn/admin_dir/script/holder.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/jquery-1.10.2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/jquery-migrate-1.2.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/jquery.menu.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/holder.js') }}"></script>
     <!--CORE JAVASCRIPT-->
-    <script type="text/javascript" src="{{ asset('vpn/admin_dir/script/main.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/main.js') }}"></script>
 
     <script type="text/javascript" src="{{ asset("vpn/login_dir/js/jquery.min.js") }}"></script>
     {{--<script type="text/javascript" src="../../loginDir/style/js/jquery.form.js"></script>--}}

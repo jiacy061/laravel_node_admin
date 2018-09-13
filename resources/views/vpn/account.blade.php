@@ -130,7 +130,7 @@
     <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/jquery-migrate-1.2.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/jquery.menu.js') }}"></script>
     <!--CORE JAVASCRIPT-->
-    <script type="text/javascript" src="{{ asset('vpn/admin_dir/script/main.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/main.js') }}"></script>
     <!-- QRCODE generate -->
     <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/jquery.qrcode.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/qrcode.js') }}"></script>
