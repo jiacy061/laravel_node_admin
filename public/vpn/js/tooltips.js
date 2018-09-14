@@ -43,7 +43,7 @@ function show_msg(msg,url){
 			   {
 				  location.href=url;
 			   }
-		   },800);
+		   },1200);
 
 	 }, "1200");
 }

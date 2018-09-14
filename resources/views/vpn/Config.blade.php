@@ -261,13 +261,13 @@
     </script>
     <script type="text/javascript">
         if ('{{$msg}}' == 'succeed') {
-            alert('更新成功，配置将在整点生效，请耐心等待！');
+            show_msg('更新成功，配置立即生效，请更新您的本地配置！', '');
         } else if ('{{$msg}}' == 'fail') {
             show_err_msg('更新失败，详情咨询系统管理员！\n{{ $run_exception }}');
         } else if ('{{$msg}}' == 'Bad port') {
-            show_err_msg('端口非法或已被占用，请更换一个端口');
+            show_err_msg('端口非法或已被占用，请更换一个端口！');
         } else if ('{{$msg}}' == 'Bad password') {
-            show_err_msg('更改登陆密码失败');
+            show_err_msg('更改登陆密码失败！');
         }
     </script>
 

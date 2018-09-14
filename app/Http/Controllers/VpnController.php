@@ -13,7 +13,7 @@ class VpnController extends Controller
 
     public function registerPost(Request $request) {
         $code = $request->input('code');
-        $ret = DB::select('SELECT invitation_code FROM invitation_code WHERE invitation_code=?', [$code]);
+        $ret = DB::select('SELECT * FROM invitation_code WHERE invitation_code=?', [$code]);
 
         if (sizeof($ret)!=0) {
             // 存在该邀请码
@@ -46,7 +46,7 @@ class VpnController extends Controller
 
                 // 重启VPN
                 $this->updateVpnSystem(null, $port);
-                system('./vpn/adminDir/restartVPN');
+                system('./vpn/admin_dir/restartVPN');
                 ob_clean();
 
                 return view('vpn/signup', ['ret'=>'good register']);
@@ -290,7 +290,7 @@ class VpnController extends Controller
 
         $bool1 = $this->updateVpnSystem($old_port, $port);
         $run_exception = system('./vpn/admin_dir/restartVPN', $bool2);
-	    ob_clean();
+        ob_clean();
 
         if ($bool1 && !$bool2) {
 //        if ($bool1) {
@@ -299,7 +299,7 @@ class VpnController extends Controller
             return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         } else {
             $msg = 'fail';
-            $run_exception = $run_exception.':'.$bool1.':'.$bool2;
+            $run_exception = $run_exception;
             return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         }
     }
