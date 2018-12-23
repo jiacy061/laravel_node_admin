@@ -81,23 +81,8 @@ class VpnController extends Controller
 
                 if ($bool) {
                     $cookie = cookie('vpn', $token, 0, '/vpn/');
-                    $ret = DB::select('SELECT * FROM account_info, account_config 
-                    WHERE account_info.account=? AND account_config.account=?', [$port, $port]);
-                    $usr_name = array_column($ret, 'usr_name')[0];
-                    $port_password = array_column($ret, 'password')[0];
-                    $method = array_column($ret, 'method')[0];
-                    $protocol = array_column($ret, 'protocol')[0];
-                    $protocol_param = array_column($ret, 'protocol_param')[0];
-                    $obfs = array_column($ret, 'obfs')[0];
-                    $obfs_param = array_column($ret, 'obfs_param')[0];
-                    $server = array_column($ret, 'server')[0];
-
-                    $qr_string = $this->generate_ssr_url($port, $port_password, $server, $method, $protocol, $obfs, $obfs_param);
-
-                    return response()->view('vpn/account', compact('usr_name','port',
-                        'port_password', 'method', 'server', 'protocol', 'protocol_param',
-                        'obfs', 'obfs_param', 'qr_string'))->withCookie($cookie);
-//                    return Redirect()->to('vpn/AccountInfo/'.$port)->withCookie($cookie);
+                    return Redirect()->to('vpn/account/'.$port)->withCookie($cookie);
+//                    return $this->adminHomePage($port)->withCookie($cookie);
                 }
                 else
                     return Redirect()->to('vpn/login');
@@ -133,11 +118,12 @@ class VpnController extends Controller
             $obfs_param = array_column($ret, 'obfs_param')[0];
             $server = array_column($ret, 'server')[0];
 
-            $qr_string = $this->generate_ssr_url($port, $port_password, $server, $method, $protocol, $obfs, $obfs_param);
+            $qr_string_ssr = $this->generate_ssr_url($port, $port_password, $server, $method, $protocol, $obfs, $obfs_param);
+            $qr_string_ss = $this->generate_ss_url($port, $port_password, $server, $method);
 
             return response()->view('vpn/account', compact('usr_name','port',
                 'port_password', 'method', 'server', 'protocol', 'protocol_param',
-                'obfs', 'obfs_param', 'qr_string'))->withCookie($cookie);
+                'obfs', 'obfs_param', 'qr_string_ssr', 'qr_string_ss'));
         } else {
             // token错误
             return Redirect()->to('vpn/login');
@@ -161,8 +147,7 @@ class VpnController extends Controller
             $email = array_column($ret, 'email')[0];
             $run_exception = '';
 
-            return response()->view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'))
-                ->withCookie($cookie);
+            return response()->view('vpn/config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         } else {
             // token错误
             return Redirect()->to('vpn/login');
@@ -185,8 +170,7 @@ class VpnController extends Controller
             $ret = DB::select('SELECT life FROM server_info WHERE server=?', [$server]);
             $server_life_time = array_column($ret, 'life')[0];
 
-            return response()->view('vpn/about', compact('port','usr_name', 'server_life_time'))
-                ->withCookie($cookie);
+            return response()->view('vpn/about', compact('port','usr_name', 'server_life_time'));
         } else {
             // token错误
             return Redirect()->to('vpn/login');
@@ -426,6 +410,14 @@ class VpnController extends Controller
         $base64_string = base64_encode($config_string);
         $base64_string = str_replace('=', '', $base64_string);
         $qr_string = "ssr://" . $base64_string;
+        return $qr_string;
+    }
+
+    private function generate_ss_url($port, $port_password, $server, $method) {
+        $base_string = $method.':'.$port_password.'@'.$server.':'.$port;
+        $base64_string = base64_encode($base_string);
+        $base64_string = str_replace('=', '', $base64_string);
+        $qr_string = "ss://" . $base64_string;
         return $qr_string;
     }
 
