@@ -148,6 +148,7 @@ hr {
   height: 50px;
 }
 #topbar.navbar-default {
+  background: #1E1E1E;
   border: 0;
 }
 #topbar .navbar-header {

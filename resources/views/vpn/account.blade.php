@@ -114,7 +114,7 @@
                                 <div id="ss_content" class="alert alert-success alert-dismissable">
                                     <h5><strong id="ss_tip_text"><br>点击此处展开 SS 配置二维码</strong></h5>
                                     <div id = "qrcodeDivOfSS" style="display:none">
-                                        <div id="qrcodeCanvasOfSS" style="width: 38%"></div>
+                                        <div id="qrcodeCanvasOfSS"></div>
                                         <h5><strong><br>使用 SS 需要将协议设置为“origin”，混淆设置为“plain”。</strong></h5>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                 <div id="ssr_content" class="alert alert-success alert-dismissable">
                                     <h5><strong id="ssr_tip_text"><br>点击此处展开 SSR 配置二维码</strong></h5>
                                     <div id="qrcodeDivOfSSR" style="display:none">
-                                        <div id="qrcodeCanvasOfSSR" style="width: 38%"></div>
+                                        <div id="qrcodeCanvasOfSSR"></div>
                                         <h5><strong><br>推荐使用 SSR，并将协议设置为“auth_aes128_md5”，混淆设置为“tls1.2_ticket_auth”。</strong></h5>
                                     </div>
                                 </div>
@@ -164,6 +164,15 @@
 <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/jquery.qrcode.js') }}"></script>
 <script type="text/javascript" src="{{ asset('vpn/admin_dir/js/qrcode.js') }}"></script>
 <script>
+    function isPC(){
+        var userAgentInfo = navigator.userAgent;
+        var Agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+        var flag = true;
+        for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }
+        }
+        return flag;
+    }
     //jQuery('#qrcode').qrcode("this plugin is great");
     jQuery('#qrcodeCanvasOfSS').qrcode({
         text: "{{ $qr_string_ss }}"
@@ -171,6 +180,15 @@
     jQuery('#qrcodeCanvasOfSSR').qrcode({
         text: "{{ $qr_string_ssr }}"
     });
+
+    window.onload = function() {
+        if (isPC()) {
+            var qrcodeCanvasOfSS = document.getElementById("qrcodeCanvasOfSS");
+            var qrcodeCanvasOfSSR = document.getElementById("qrcodeCanvasOfSSR");
+            qrcodeCanvasOfSS.style.width = "38%";
+            qrcodeCanvasOfSSR.style.width = "38%";
+        }
+    }
 </script>
 <script>
     var ssDiv = $('#ss_content');
@@ -186,7 +204,8 @@
     ssrDiv.click(function () {
         qrcodeDivOfSSR.slideToggle();
         ssrText.slideToggle();
-    })
+    });
+
 </script>
 
 </body>
