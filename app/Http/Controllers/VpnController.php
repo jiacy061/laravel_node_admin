@@ -13,16 +13,20 @@ class VpnController extends Controller
 
     public function registerPost(Request $request) {
         $code = $request->input('code');
+        $code = $this->trim_all($code);
         $ret = DB::select('SELECT * FROM invitation_code WHERE invitation_code=?', [$code]);
 
         if (sizeof($ret)!=0) {
             // 存在该邀请码
             $server = array_column($ret, 'server')[0];
-            $username = $request->input('username');
-            $email = $request->input('email');
-            $password = $request->input('password');
-            $confirmPassword = $request->input('confirmPassword');
-            $port_password = $request->input('port_password');
+            if ($server == null) {
+                $server = 'node.jiacyer.com';
+            }
+            $username = $this->trim_all($request->input('username'));
+            $email = $this->trim_all($request->input('email'));
+            $password = $this->trim_all($request->input('password'));
+            $confirmPassword = $this->trim_all($request->input('confirmPassword'));
+            $port_password = $this->trim_all($request->input('port_password'));
             if (strcmp($password, $confirmPassword)==0) {
                 // 两次密码输入正确
                 do {
@@ -60,8 +64,8 @@ class VpnController extends Controller
     }
 
     public function loginPost(Request $request) {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $email = $this->trim_all($request->input('email'));
+        $password = $this->trim_all($request->input('password'));
         $ret = DB::select('SELECT * FROM login_info WHERE email=?', [$email]);
 
         if (sizeof($ret)!=0) {
@@ -178,17 +182,17 @@ class VpnController extends Controller
     }
 
     public function updatePost(Request $request, $port) {
-        $usrname = $request->input('usrname');
-        $email = $request->input('email');
-        $usr_password = $request->input('usr_password');
-        $confirm_password = $request->input('confirmPassword');
-        $port_s = $request->input('port');
-        $port_password = $request->input('port_password');
-        $method = $request->input('method');
-        $protocol = $request->input('protocol');
-        $obfs = $request->input('obfs');
-        $protocol_param = $request->input('protocol_param');
-        $obfs_param = $request->input('obfs_param');
+        $usrname = $this->trim_all($request->input('usrname'));
+        $email = $this->trim_all($request->input('email'));
+        $usr_password = $this->trim_all($request->input('usr_password'));
+        $confirm_password = $this->trim_all($request->input('confirmPassword'));
+        $port_s = $this->trim_all($request->input('port'));
+        $port_password = $this->trim_all($request->input('port_password'));
+        $method = $this->trim_all($request->input('method'));
+        $protocol = $this->trim_all($request->input('protocol'));
+        $obfs = $this->trim_all($request->input('obfs'));
+        $protocol_param = $this->trim_all($request->input('protocol_param'));
+        $obfs_param = $this->trim_all($request->input('obfs_param'));
         $run_exception = '';
 
 //        $ret = DB::select('SELECT * FROM login_info WHERE email=?', [$email]);
@@ -421,4 +425,11 @@ class VpnController extends Controller
         return $qr_string;
     }
 
+    //删除所有的空格
+    private function trim_all($str)
+    {
+        $arr = array(" ","　","\t","\n","\r");
+        $hou = array("","","","","");
+        return str_replace($arr,$hou,$str);
+    }
 }
