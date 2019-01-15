@@ -35,7 +35,7 @@ class VpnController extends Controller
                     if (sizeof($ret)==0)
                         break; // 不存在该端口号
                 } while(true);
-                
+
                 // 经过两次后端hash，总三次hash
                 $password = md5(md5($password));
 
@@ -113,6 +113,9 @@ class VpnController extends Controller
             // IP和token正确
             $ret = DB::select('SELECT * FROM account_info, account_config 
                     WHERE account_info.account=? AND account_config.account=?', [$port, $port]);
+            if (sizeof($ret) == 0)
+                return Redirect()->to('vpn/login');
+
             $usr_name = array_column($ret, 'usr_name')[0];
             $port_password = array_column($ret, 'password')[0];
             $method = array_column($ret, 'method')[0];
@@ -169,6 +172,9 @@ class VpnController extends Controller
         if (strcmp($t, $cookie)==0) {
             // IP和token正确
             $ret = DB::select('SELECT usr_name FROM account_info WHERE account=?', [$port]);
+            if (sizeof($ret) == 0)
+                return Redirect()->to('vpn/login');
+
             $usr_name = array_column($ret, 'usr_name')[0];
             $server = 'node.jiacyer.com';
             $ret = DB::select('SELECT life FROM server_info WHERE server=?', [$server]);
@@ -207,7 +213,7 @@ class VpnController extends Controller
                 $ret = DB::select('SELECT usr_name FROM account_info WHERE account=?', [$port]);
                 $usr_name = array_column($ret, 'usr_name')[0];
                 $msg = 'Bad port';
-                return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
+                return view('vpn/config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
             } else {
                 // 端口合法
                 DB::update('UPDATE account_info SET account=? WHERE account=?', [$new_port, $port]);
@@ -234,7 +240,7 @@ class VpnController extends Controller
                 $ret = DB::select('SELECT usr_name FROM account_info WHERE account=?', [$port]);
                 $usr_name = array_column($ret, 'usr_name')[0];
                 $msg = 'Bad password';
-                return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
+                return view('vpn/config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
             }
         }
 
@@ -284,11 +290,11 @@ class VpnController extends Controller
 //        if ($bool1) {
             $msg = 'succeed';
 //            $run_exception = ''.$bool1;
-            return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
+            return view('vpn/config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         } else {
             $msg = 'fail';
             $run_exception = $run_exception;
-            return view('vpn/Config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
+            return view('vpn/config', compact('port', 'usr_name', 'msg', 'email', 'run_exception'));
         }
     }
 
@@ -334,7 +340,7 @@ class VpnController extends Controller
             $new_password = array_column($ret, 'password')[0];
 
             if ($new_method==$method && $new_protocol==$protocol && $new_obfs_param == $obfs_param &&
-            $new_protocol_param == $protocol_param && $new_obfs==$obfs) {
+                $new_protocol_param == $protocol_param && $new_obfs==$obfs) {
                 // 与公共配置一致时
                 $port_password_array[$new_port] = $new_password;
             } else {
